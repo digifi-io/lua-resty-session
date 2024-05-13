@@ -11,14 +11,14 @@ __DATA__
 === TEST 1: session cookie is returned
 --- http_config
   init_by_lua_block {
-    require("resty.session").init({
+    require("digifi.resty.session").init({
       storage  = "cookie",
     })
   }
 --- config
 location = /test {
     content_by_lua_block {
-      local session = require "resty.session".new()
+      local session = require "digifi.resty.session".new()
       local ok = session:save()
       if ok then
         ngx.say("yay")
@@ -40,7 +40,7 @@ Set-Cookie: .*session=.+;.*
 === TEST 2: remember cookie is returned when remember=true
 --- http_config
   init_by_lua_block {
-    require("resty.session").init({
+    require("digifi.resty.session").init({
       remember = true,
       storage  = "cookie",
     })
@@ -48,7 +48,7 @@ Set-Cookie: .*session=.+;.*
 --- config
 location = /test {
     content_by_lua_block {
-      local session = require "resty.session".new()
+      local session = require "digifi.resty.session".new()
       local ok = session:save()
      
       if ok then
@@ -72,7 +72,7 @@ Set-Cookie: .*remember=.+;.*
 extracted correctly
 --- http_config
   init_by_lua_block {
-    require("resty.session").init({
+    require("digifi.resty.session").init({
       secret           = "RaJKp8UQW1",
       storage          = "cookie",
       audience         = "my_application",
@@ -84,7 +84,7 @@ extracted correctly
 --- config
 location = /test {
     content_by_lua_block {
-      local session = require "resty.session".open()
+      local session = require "digifi.resty.session".open()
       local sub     = session:get_subject()
       local aud     = session:get_audience()
       local quote   = session:get("quote")
@@ -108,7 +108,7 @@ Lua Fan|my_application|Lorem ipsum dolor sit amet
 upstream
 --- http_config
   init_by_lua_block {
-    require("resty.session").init({
+    require("digifi.resty.session").init({
       secret           = "RaJKp8UQW1",
       storage          = "cookie",
       audience         = "my_application",
@@ -132,7 +132,7 @@ upstream
 --- config
 location = /test {
     access_by_lua_block {
-      local session = require "resty.session".open()
+      local session = require "digifi.resty.session".open()
       session:clear_request_cookie()
     }
     proxy_pass http://unix:/$TEST_NGINX_NXSOCK/nginx.sock;

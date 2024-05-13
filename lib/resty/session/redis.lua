@@ -1,10 +1,10 @@
 ---
 -- Redis backend for session library
 --
--- @module resty.session.redis
+-- @module digifi.resty.session.redis
 
 
-local common = require "resty.session.redis.common"
+local common = require "digifi.resty.session.redis.common"
 local redis = require "resty.redis"
 
 

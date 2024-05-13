@@ -1,10 +1,10 @@
 ---
 -- File storage backend for session library.
 --
--- @module resty.session.file
+-- @module digifi.resty.session.file
 
 
-local file_utils = require "resty.session.file.utils"
+local file_utils = require "digifi.resty.session.file.utils"
 
 
 local run_worker_thread = file_utils.run_worker_thread
@@ -18,7 +18,7 @@ local byte = string.byte
 local SLASH_BYTE = byte("/")
 
 
-local THREAD_MODULE = "resty.session.file.thread"
+local THREAD_MODULE = "digifi.resty.session.file.thread"
 
 
 local DEFAULT_POOL = "default"

@@ -1,11 +1,11 @@
 ---
 -- Shared Memory (SHM) backend for session library
 --
--- @module resty.session.shm
+-- @module digifi.resty.session.shm
 
 
 local table_new = require "table.new"
-local utils  = require "resty.session.utils"
+local utils  = require "digifi.resty.session.utils"
 
 
 local meta_get_value = utils.meta_get_value

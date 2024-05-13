@@ -1,7 +1,7 @@
 ---
 -- Postgres backend for session library.
 --
--- @module resty.session.postgres
+-- @module digifi.resty.session.postgres
 
 
 ---

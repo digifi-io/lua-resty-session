@@ -1,7 +1,7 @@
 ---
 -- MySQL / MariaDB backend for session library
 --
--- @module resty.session.mysql
+-- @module digifi.resty.session.mysql
 
 
 ---

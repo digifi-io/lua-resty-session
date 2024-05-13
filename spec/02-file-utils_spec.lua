@@ -1,4 +1,4 @@
-local file_utils = require "resty.session.file.utils"
+local file_utils = require "digifi.resty.session.file.utils"
 
 
 local fmt = string.format
