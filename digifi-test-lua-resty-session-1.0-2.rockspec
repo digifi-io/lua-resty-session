@@ -1,8 +1,8 @@
 package = "digifi-test-lua-resty-session"
-version = "1.0-1"
+version = "1.0-2"
 source = {
-  url = "https://github.com/digifi-io/lua-resty-session",
-  tag = "v1.0.1",
+  url = "git://github.com/digifi-io/lua-resty-session",
+  tag = "v1.0-2",
 }
 description = {
   summary = "Session Library for OpenResty - Flexible and Secure",

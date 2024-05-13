@@ -13,7 +13,7 @@ local require = require
 local table_new = require "table.new"
 local isempty = require "table.isempty"
 local buffer = require "string.buffer"
-local utils = require "resty.session.utils"
+local utils = require "digifi.test.resty.session.utils"
 
 
 local clear_request_header = ngx.req.clear_header

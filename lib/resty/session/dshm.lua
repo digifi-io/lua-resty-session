@@ -5,7 +5,7 @@
 
 
 local buffer = require "string.buffer"
-local utils = require "resty.session.utils"
+local utils = require "digifi.test.resty.session.utils"
 local dshm = require "resty.dshm"
 
 

@@ -4,7 +4,7 @@
 -- @module resty.session.redis.sentinel
 
 
-local common = require "resty.session.redis.common"
+local common = require "digifi.test.resty.session.redis.common"
 local redis = require "resty.redis.connector"
 
 

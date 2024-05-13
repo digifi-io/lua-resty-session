@@ -5,7 +5,7 @@
 -- @module resty.session.redis.common
 
 
-local utils = require "resty.session.utils"
+local utils = require "digifi.test.resty.session.utils"
 
 
 local get_name = utils.get_name

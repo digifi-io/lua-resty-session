@@ -4,7 +4,7 @@
 -- @module resty.session.file
 
 
-local file_utils = require "resty.session.file.utils"
+local file_utils = require "digifi.test.resty.session.file.utils"
 
 
 local run_worker_thread = file_utils.run_worker_thread
