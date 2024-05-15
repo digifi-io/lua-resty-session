@@ -5,7 +5,7 @@
 
 
 local table_new = require "table.new"
-local utils  = require "digifi.resty.session.utils"
+local utils  = require "digifi.test.resty.session.utils"
 
 
 local meta_get_value = utils.meta_get_value

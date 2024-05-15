@@ -809,19 +809,19 @@ local load_storage do
 
     elseif storage == "dshm" then
       if not DSHM then
-        DSHM = require("resty.session.dshm")
+        DSHM = require("digifi.test.resty.session.dshm")
       end
       return DSHM.new(configuration and configuration.dshm)
 
     elseif storage == "file" then
       if not FILE then
-        FILE = require("resty.session.file")
+        FILE = require("digifi.test.resty.session.file")
       end
       return FILE.new(configuration and configuration.file)
 
     elseif storage == "memcached" or storage == "memcache" then
       if not MEMCACHED then
-        MEMCACHED = require("resty.session.memcached")
+        MEMCACHED = require("digifi.test.resty.session.memcached")
       end
       return MEMCACHED.new(configuration and configuration.memcached or configuration.memcache)
 
@@ -833,7 +833,7 @@ local load_storage do
 
     elseif storage == "postgres" or storage == "postgresql" then
       if not POSTGRES then
-        POSTGRES = require("resty.session.postgres")
+        POSTGRES = require("digifi.test.resty.session.postgres")
       end
       return POSTGRES.new(configuration and configuration.postgres or configuration.postgresql)
 
@@ -842,26 +842,26 @@ local load_storage do
       if cfg then
         if cfg.nodes then
           if not REDIS_CLUSTER then
-            REDIS_CLUSTER = require("resty.session.redis.cluster")
+            REDIS_CLUSTER = require("digifi.test.resty.session.redis.cluster")
           end
           return REDIS_CLUSTER.new(cfg)
 
         elseif cfg.sentinels then
           if not REDIS_SENTINEL then
-            REDIS_SENTINEL = require("resty.session.redis.sentinel")
+            REDIS_SENTINEL = require("digifi.test.resty.session.redis.sentinel")
           end
           return REDIS_SENTINEL.new(cfg)
         end
       end
 
       if not REDIS then
-        REDIS = require("resty.session.redis")
+        REDIS = require("digifi.test.resty.session.redis")
       end
       return REDIS.new(cfg)
 
     elseif storage == "shm" then
       if not SHM then
-        SHM = require("resty.session.shm")
+        SHM = require("digifi.test.resty.session.shm")
       end
 
       return SHM.new(configuration and configuration.shm)

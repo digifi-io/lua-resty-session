@@ -4,8 +4,8 @@
 -- @module resty.session.file.thread
 
 
-local file_utils = require "resty.session.file.utils"
-local utils = require "resty.session.utils"
+local file_utils = require "digifi.test.resty.session.file.utils"
+local utils = require "digifi.test.resty.session.utils"
 
 
 local get_modification = file_utils.get_modification
