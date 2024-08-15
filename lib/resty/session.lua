@@ -1875,9 +1875,13 @@ function metatable:open()
     return nil, err
   end
 
-  local ok, err = save(self, nil, true)
-  if not ok then
-    return nil, err
+
+  if not self.disable_remember_cookie_regeneration then
+    local ok, regenerate_remember_cookie_error = save(self, nil, true)
+
+    if not ok then
+      return nil, regenerate_remember_cookie_error
+    end
   end
 
   self.state = STATE_NEW
@@ -2454,6 +2458,7 @@ function session.new(configuration)
   local ikm_fallbacks             = configuration and configuration.ikm_fallbacks
   local request_headers           = configuration and configuration.request_headers
   local response_headers          = configuration and configuration.response_headers
+  local disable_remember_cookie_regeneration = configuration and configuration.disable_remember_cookie_regeneration
 
   local cookie_http_only = configuration and configuration.cookie_http_only
   if cookie_http_only == nil then
@@ -2654,6 +2659,7 @@ function session.new(configuration)
         subject,
       },
     },
+    disable_remember_cookie_regeneration = disable_remember_cookie_regeneration,
   }, metatable)
 
   if storage then
