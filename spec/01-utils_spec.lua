@@ -1,4 +1,4 @@
-local utils = require "resty.session.utils"
+local utils = require "digifi.resty.session.utils"
 
 
 local describe = describe

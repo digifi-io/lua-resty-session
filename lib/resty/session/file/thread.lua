@@ -1,11 +1,11 @@
 ---
 -- File storage backend worker thread module
 --
--- @module resty.session.file.thread
+-- @module digifi.resty.session.file.thread
 
 
-local file_utils = require "resty.session.file.utils"
-local utils = require "resty.session.utils"
+local file_utils = require "digifi.resty.session.file.utils"
+local utils = require "digifi.resty.session.utils"
 
 
 local get_modification = file_utils.get_modification

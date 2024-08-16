@@ -1,6 +1,6 @@
-# lua-resty-session
+# digifi-lua-resty-session
 
-**lua-resty-session** is a secure, and flexible session library for OpenResty.
+**digifi-lua-resty-session** is a secure, and flexible session library for OpenResty.
 
 ## TL;DR;
 
@@ -32,7 +32,7 @@ events {
 
 http {
   init_by_lua_block {
-    require "resty.session".init({
+    require "digifi.resty.session".init({
       remember = true,
       audience = "demo",
       secret   = "RaJKp8UQW1",
@@ -59,7 +59,7 @@ http {
 
     location /start {
       content_by_lua_block {
-        local session = require "resty.session".new()
+        local session = require "digifi.resty.session".new()
         session:set_subject("OpenResty Fan")
         session:set("quote", "The quick brown fox jumps over the lazy dog")
         local ok, err = session:save()
@@ -77,7 +77,7 @@ http {
 
     location /started {
       content_by_lua_block {
-        local session, err = require "resty.session".start()
+        local session, err = require "digifi.resty.session".start()
         
         ngx.say(string.format([[
           <html>
@@ -97,7 +97,7 @@ http {
     
     location /modify {
       content_by_lua_block {
-        local session, err = require "resty.session".start()
+        local session, err = require "digifi.resty.session".start()
         session:set_subject("Lua Fan")
         session:set("quote", "Lorem ipsum dolor sit amet")
         local _, err_save = session:save()
@@ -115,7 +115,7 @@ http {
     
     location /modified {
       content_by_lua_block {
-        local session, err = require "resty.session".start()
+        local session, err = require "digifi.resty.session".start()
 
         ngx.say(string.format([[
           <html>
@@ -135,7 +135,7 @@ http {
     
     location /destroy {
       content_by_lua_block {
-        local ok, err = require "resty.session".destroy()
+        local ok, err = require "digifi.resty.session".destroy()
 
         ngx.say(string.format([[
           <html>
@@ -150,7 +150,7 @@ http {
     
     location /destroyed {
       content_by_lua_block {
-        local session, err = require "resty.session".open()
+        local session, err = require "digifi.resty.session".open()
 
         ngx.say(string.format([[
           <html>
@@ -263,7 +263,7 @@ Here is an example:
 
 ```lua
 init_by_lua_block {
-  require "resty.session".init({
+  require "digifi.resty.session".init({
     remember = true,
     store_metadata = true,
     secret = "RaJKp8UQW1",
@@ -666,7 +666,7 @@ to set global default configuration to all session instances created by this
 library.
 
 ```lua
-require "resty.session".init({
+require "digifi.resty.session".init({
   audience = "my-application",
   storage = "redis",
   redis = {
@@ -688,9 +688,9 @@ See [configuration](#configuration) for possible configuration settings.
 Creates a new session instance.
 
 ```lua
-local session = require "resty.session".new()
+local session = require "digifi.resty.session".new()
 -- OR
-local session = require "resty.session".new({
+local session = require "digifi.resty.session".new({
   audience = "my-application",
 })
 ```
@@ -711,9 +711,9 @@ a message of why opening might have failed (the function will still return
 `session` too).
 
 ```lua
-local session = require "resty.session".open()
+local session = require "digifi.resty.session".open()
 -- OR
-local session, err, exists = require "resty.session".open({
+local session, err, exists = require "digifi.resty.session".open({
   audience = "my-application",
 })
 ```
@@ -734,9 +734,9 @@ was succesful.  The `err` (a string) contains a message of why opening or
 refreshing might have failed (the function will still return `session` too).
 
 ```lua
-local session = require "resty.session".start()
+local session = require "digifi.resty.session".start()
 -- OR
-local session, err, exists, refreshed = require "resty.session".start({
+local session, err, exists, refreshed = require "digifi.resty.session".start({
   audience = "my-application",
 })
 ```
@@ -767,9 +767,9 @@ When the last audience is logged out, the cookie will be destroyed
 as well and invalidated on a client.
 
 ```lua
-require "resty.session".logout()
+require "digifi.resty.session".logout()
 -- OR
-local ok, err, exists, logged_out = require "resty.session".logout({
+local ok, err, exists, logged_out = require "digifi.resty.session".logout({
   audience = "my-application",
 })
 ```
@@ -795,9 +795,9 @@ The `ok` (truthy) will be `true` when session existed and was
 successfully logged out.
 
 ```lua
-require "resty.session".destroy()
+require "digifi.resty.session".destroy()
 -- OR
-local ok, err, exists, destroyed = require "resty.session".destroy({
+local ok, err, exists, destroyed = require "digifi.resty.session".destroy({
   cookie_name = "auth",
 })
 ```
@@ -816,7 +816,7 @@ session was opened and validated. Otherwise, it returns `nil` and
 an error message.
 
 ```lua
-local session = require "resty.session".new()
+local session = require "digifi.resty.session".new()
 local ok, err = session:open()
 if ok then
   -- session exists
@@ -837,7 +837,7 @@ possibly save the data in backend store. It returns `true` when session was save
 Otherwise, it returns `nil` and an error message.
 
 ```lua
-local session = require "resty.session".new()
+local session = require "digifi.resty.session".new()
 session:set_subject("john")
 local ok, err = session:save()
 if not ok then
@@ -856,7 +856,7 @@ APIs. Normally the `session:refresh` is used to call this indirectly. In
 error case it returns `nil` and an error message, otherwise `true`.
 
 ```lua
-local session, err, exists = require "resty.session".open()
+local session, err, exists = require "digifi.resty.session".open()
 if exists then
   ok, err = session:touch()
 end
@@ -875,7 +875,7 @@ so it may be skipped in some cases (you can call `session:touch()` to force it).
 In error case it returns `nil` and an error message, otherwise `true`.
 
 ```lua
-local session, err, exists = require "resty.session".open()
+local session, err, exists = require "digifi.resty.session".open()
 if exists then
   local ok, err = session:refresh()
 end
@@ -893,7 +893,7 @@ and saves it (logging out from the current audience). In error case it returns `
 and an error message, otherwise `true`.
 
 ```lua
-local session, err, exists = require "resty.session".open()
+local session, err, exists = require "digifi.resty.session".open()
 if exists then
   local ok, err = session:logout()
 end
@@ -908,7 +908,7 @@ Destroy the session and clear the cookies. In error case it returns `nil`
 and an error message, otherwise `true`.
 
 ```lua
-local session, err, exists = require "resty.session".open()
+local session, err, exists = require "digifi.resty.session".open()
 if exists then
   local ok, err = session:destroy()
 end
@@ -922,7 +922,7 @@ end
 Just closes the session instance so that it cannot be used anymore.
 
 ```lua
-local session = require "resty.session".new()
+local session = require "digifi.resty.session".new()
 session:set_subject("john")
 local ok, err = session:save()
 if not ok then
@@ -939,7 +939,7 @@ session:close()
 Set session data. The `data` needs to be a `table`.
 
 ```lua
-local session, err, exists = require "resty.session".open()
+local session, err, exists = require "digifi.resty.session".open()
 if not exists then
    session:set_data({
      cart = {},
@@ -956,7 +956,7 @@ end
 Get session data.
 
 ```lua
-local session, err, exists = require "resty.session".open()
+local session, err, exists = require "digifi.resty.session".open()
 if exists then
   local data = session:get_data()
   ngx.req.set_header("Authorization", "Bearer " .. data.access_token)
@@ -971,7 +971,7 @@ end
 Set a value in session.
 
 ```lua
-local session, err, exists = require "resty.session".open()
+local session, err, exists = require "digifi.resty.session".open()
 if not exists then
   session:set("access-token", "eyJ...")
   session:save()
@@ -986,7 +986,7 @@ end
 Get a value from session.
 
 ```lua
-local session, err, exists = require "resty.session".open()
+local session, err, exists = require "digifi.resty.session".open()
 if exists then
   local access_token = session:get("access-token")
   ngx.req.set_header("Authorization", "Bearer " .. access_token)
@@ -1000,7 +1000,7 @@ end
 Set session audience.
 
 ```lua
-local session = require "resty.session".new()
+local session = require "digifi.resty.session".new()
 session.set_audience("my-service")
 ```
 
@@ -1019,7 +1019,7 @@ Set session subject.
 Set session audience.
 
 ```lua
-local session = require "resty.session".new()
+local session = require "digifi.resty.session".new()
 session.set_subject("john@doe.com")
 ```
 
@@ -1031,7 +1031,7 @@ session.set_subject("john@doe.com")
 Get session subject.
 
 ```lua
-local session, err, exists = require "resty.session".open()
+local session, err, exists = require "digifi.resty.session".open()
 if exists then
   local subject = session.get_subject()
 end
@@ -1056,7 +1056,7 @@ Get session property. Possible property names:
 *Note:* the returned value may be `nil`.
 
 ```lua
-local session, err, exists = require "resty.session".open()
+local session, err, exists = require "digifi.resty.session".open()
 if exists then
   local timeout = session.get_property("timeout")
 end
@@ -1073,7 +1073,7 @@ In many login forms user is given an option for "remember me".
 You can call this function based on what user selected.
 
 ```lua
-local session = require "resty.session".new()
+local session = require "digifi.resty.session".new()
 if ngx.var.args.remember then
   session:set_remember(true)
 end
@@ -1089,7 +1089,7 @@ session:save()
 Get state of persistent sessions.
 
 ```lua
-local session, err, exists = require "resty.session".open()
+local session, err, exists = require "digifi.resty.session".open()
 if exists then
   local remember = session.get_remember()
 end
@@ -1106,7 +1106,7 @@ a proxy server and don't want the session cookies to be forwarded
 to the upstream service.
 
 ```lua
-local session, err, exists = require "resty.session".open()
+local session, err, exists = require "digifi.resty.session".open()
 if exists then
   session:clear_request_cookie()
 end
@@ -1120,7 +1120,7 @@ end
 Sets request and response headers based on configuration.
 
 ```lua
-local session, err, exists = require "resty.session".open({
+local session, err, exists = require "digifi.resty.session".open({
   request_headers = { "audience", "subject", "id" },
   response_headers = { "timeout", "idling-timeout", "rolling-timeout", "absolute-timeout" },
 })
@@ -1142,7 +1142,7 @@ See [configuration](#configuration) for possible header names.
 Set request headers.
 
 ```lua
-local session, err, exists = require "resty.session".open()
+local session, err, exists = require "digifi.resty.session".open()
 if exists then
   session:set_request_headers("audience", "subject", "id")
 end
@@ -1160,7 +1160,7 @@ See [configuration](#configuration) for possible header names.
 Set request headers.
 
 ```lua
-local session, err, exists = require "resty.session".open()
+local session, err, exists = require "digifi.resty.session".open()
 if exists then
   session:set_response_headers("timeout", "idling-timeout", "rolling-timeout", "absolute-timeout")
 end
@@ -1184,7 +1184,7 @@ you want to use this for data that needs to be encrypted, you need
 to encrypt value before passing it to thus function.
 
 ```lua
-local session, err, exists = require "resty.session".open()
+local session, err, exists = require "digifi.resty.session".open()
 if exists then
   session.info:set("last-access", ngx.now())
   session.info:save()
@@ -1202,7 +1202,7 @@ With cookie storage this still works, but it is then almost the same as
 Get a value from session information store.
 
 ```lua
-local session, err, exists = require "resty.session".open()
+local session, err, exists = require "digifi.resty.session".open()
 if exists then
   local last_access = session.info:get("last-access")
 end
@@ -1216,7 +1216,7 @@ end
 Save information. Only updates backend storage. Does not send a new cookie (except with cookie storage).
 
 ```lua
-local session = require "resty.session".new()
+local session = require "digifi.resty.session".new()
 session.info:set("last-access", ngx.now())
 local ok, err = session.info:save()
 ```

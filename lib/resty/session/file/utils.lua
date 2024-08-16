@@ -1,7 +1,7 @@
 ---
 -- File storage utilities
 --
--- @module resty.session.file.utils
+-- @module digifi.resty.session.file.utils
 
 
 local lfs = require "lfs"

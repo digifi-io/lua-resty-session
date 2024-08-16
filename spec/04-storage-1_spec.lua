@@ -2,7 +2,7 @@
 -- Ensure to keep the tests consistent with those in 05-storage-1_spec.lua
 
 
-local utils = require "resty.session.utils"
+local utils = require "digifi.resty.session.utils"
 
 
 local before_each = before_each

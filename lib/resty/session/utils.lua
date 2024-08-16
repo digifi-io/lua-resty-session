@@ -1,7 +1,7 @@
 ---
 -- Common utilities for session library and storage backends
 --
--- @module resty.session.utils
+-- @module digifi.resty.session.utils
 
 
 local require = require
@@ -37,7 +37,7 @@ local is_fips_mode do
   -- @treturn boolean `true` if OpenSSL is in FIPS-mode, otherwise `false`
   --
   -- @usage
-  -- local is_fips = require "resty.session.utils".is_fips_mode()
+  -- local is_fips = require "digifi.resty.session.utils".is_fips_mode()
   is_fips_mode = function()
     IS_FIPS = require("resty.openssl").get_fips_mode()
     is_fips_mode = is_fips_mode_real
@@ -71,8 +71,8 @@ local bpack, bunpack do
   -- @treturn string binary packed value
   --
   -- @usage
-  -- local packed_128 = require "resty.session.utils".bpack(1, 128)
-  -- local packed_now = require "resty.session.utils".bpack(8, ngx.time())
+  -- local packed_128 = require "digifi.resty.session.utils".bpack(1, 128)
+  -- local packed_now = require "digifi.resty.session.utils".bpack(8, ngx.time())
   bpack = function(size, value)
     buf:reset()
     for i = 1, size do
@@ -106,7 +106,7 @@ local bpack, bunpack do
   -- @treturn number binary unpacked value
   --
   -- @usage
-  -- local utils = require "resty.session.utils"
+  -- local utils = require "digifi.resty.session.utils"
   -- local value = 128
   -- local packed_value = utils.bpack(1, value)
   -- local unpacked_value = utils.bunpack(1, packed_value)
@@ -147,7 +147,7 @@ local trim do
   -- @treturn string a whitespace trimmed string
   --
   -- @usage
-  -- local trimmed = require "resty.session.utils".trim("  hello world  ")
+  -- local trimmed = require "digifi.resty.session.utils".trim("  hello world  ")
   trim = function(value)
     if value == nil or value == "" then
       return ""
@@ -207,7 +207,7 @@ local encode_json, decode_json do
   -- @treturn string json encoded value
   --
   -- @usage
-  -- local json = require "resty.session.utils".encode_json({ hello = "world" })
+  -- local json = require "digifi.resty.session.utils".encode_json({ hello = "world" })
   encode_json = function(value)
     if not cjson then
       cjson = require "cjson.safe".new()
@@ -224,7 +224,7 @@ local encode_json, decode_json do
   -- @treturn any json decoded value
   --
   -- @usage
-  -- local tbl = require "resty.session.utils".decode_json('{ "hello": "world" }')
+  -- local tbl = require "digifi.resty.session.utils".decode_json('{ "hello": "world" }')
   decode_json = function(value)
     if not cjson then
       cjson = require "cjson.safe".new()
@@ -246,7 +246,7 @@ local encode_base64url, decode_base64url, base64_size do
   -- @treturn string base64 url encoded value
   --
   -- @usage
-  -- local encoded = require "resty.session.utils".encode_base64url("test")
+  -- local encoded = require "digifi.resty.session.utils".encode_base64url("test")
   encode_base64url = function(value)
     if not base64 then
       base64 = require "ngx.base64"
@@ -263,7 +263,7 @@ local encode_base64url, decode_base64url, base64_size do
   -- @treturn string base64 url decoded value
   --
   -- @usage
-  -- local utils = require "resty.session.utils"
+  -- local utils = require "digifi.resty.session.utils"
   -- local encoded = utils.encode_base64url("test")
   -- local decoded = utils.decode_base64url(encoded)
   decode_base64url = function(value)
@@ -283,7 +283,7 @@ local encode_base64url, decode_base64url, base64_size do
   --
   -- @usage
   -- local test = "test"
-  -- local b64len = require "resty.session.utils".base64_size(#test)
+  -- local b64len = require "digifi.resty.session.utils".base64_size(#test)
   base64_size = function(size)
     return ceil(4 * size / 3)
   end
@@ -344,7 +344,7 @@ local deflate, inflate do
   --
   -- @usage
   -- local test = "test"
-  -- local deflated = require "resty.session.utils".deflate(("a"):rep(100))
+  -- local deflated = require "digifi.resty.session.utils".deflate(("a"):rep(100))
   deflate = function(data)
     if not zlib then
       zlib = require "ffi-zlib"
@@ -361,7 +361,7 @@ local deflate, inflate do
   -- @treturn string inflated data
   --
   -- @usage
-  -- local utils = require "resty.session.utils"
+  -- local utils = require "digifi.resty.session.utils"
   -- local deflated = utils.deflate(("a"):rep(100))
   -- local inflated = utils.inflate(deflated)
   inflate = function(data)
@@ -386,7 +386,7 @@ local rand_bytes do
   -- @treturn string|nil error message
   --
   -- @usage
-  -- local bytes = require "resty.session.utils".rand_bytes(32)
+  -- local bytes = require "digifi.resty.session.utils".rand_bytes(32)
   rand_bytes = function(length)
     if not rand then
       rand = require "resty.openssl.rand"
@@ -433,7 +433,7 @@ local sha256 do
   -- @treturn string|nil error message
   --
   -- @usage
-  -- local hash, err = require "resty.session.utils".sha256("hello world")
+  -- local hash, err = require "digifi.resty.session.utils".sha256("hello world")
   sha256 = function(value)
     if not digest then
       digest = require "resty.openssl.digest"
@@ -488,7 +488,7 @@ local derive_hkdf_sha256 do
   -- @treturn string|nil error message
   --
   -- @usage
-  -- local utils = require "resty.session.utils"
+  -- local utils = require "digifi.resty.session.utils"
   -- local ikm = utils.rand_bytes(32)
   -- local nonce = utils.rand_bytes(32)
   -- local key, err = utils.derive_hkdf_sha256(ikm, nonce, "encryption", 32)
@@ -552,7 +552,7 @@ local derive_pbkdf2_hmac_sha256 do
   -- @treturn string|nil error message
   --
   -- @usage
-  -- local utils = require "resty.session.utils"
+  -- local utils = require "digifi.resty.session.utils"
   -- local pass = "my-super-secret-password"
   -- local salt = utils.rand_bytes(32)
   -- local key, err = utils.derive_pbkdf2_hmac_sha256(pass, salt, "encryption", 32, 10000)
@@ -594,7 +594,7 @@ end
 -- @treturn string|nil initialization vector
 --
 -- @usage
--- local utils = require "resty.session.utils"
+-- local utils = require "digifi.resty.session.utils"
 -- local ikm = utils.rand_bytes(32)
 -- local nonce = utils.rand_bytes(32)
 -- local key, err, iv = utils.derive_aes_gcm_256_key_and_iv(ikm, nonce, "Medium")
@@ -641,7 +641,7 @@ end
 -- @treturn string|nil error message
 --
 -- @usage
--- local utils = require "resty.session.utils"
+-- local utils = require "digifi.resty.session.utils"
 -- local ikm = utils.rand_bytes(32)
 -- local nonce = utils.rand_bytes(32)
 -- local key, err = utils.derive_hmac_sha256_key(ikm, nonce)
@@ -690,7 +690,7 @@ local encrypt_aes_256_gcm, decrypt_aes_256_gcm do
   -- @treturn string|nil authentication tag
   --
   -- @usage
-  -- local utils = require "resty.session.utils"
+  -- local utils = require "digifi.resty.session.utils"
   -- local ikm = utils.rand_bytes(32)
   -- local nonce = utils.rand_bytes(32)
   -- local key, err, iv = utils.derive_aes_gcm_256_key_and_iv(ikm, nonce)
@@ -716,7 +716,7 @@ local encrypt_aes_256_gcm, decrypt_aes_256_gcm do
   -- @treturn string|nil error message
   --
   -- @usage
-  -- local utils = require "resty.session.utils"
+  -- local utils = require "digifi.resty.session.utils"
   -- local ikm = utils.rand_bytes(32)
   -- local nonce = utils.rand_bytes(32)
   -- local key, err, iv = utils.derive_aes_gcm_256_key_and_iv(ikm, nonce)
@@ -760,7 +760,7 @@ local hmac_sha256 do
   -- @treturn string|nil error message
   --
   -- @usage
-  -- local utils = require "resty.session.utils"
+  -- local utils = require "digifi.resty.session.utils"
   -- local ikm = utils.rand_bytes(32)
   -- local nonce = utils.rand_bytes(32)
   -- local key, err = utils.derive_hmac_sha256_key(ikm, nonce)
@@ -798,7 +798,7 @@ local load_storage do
   -- @treturn string|nil error message
   --
   -- @usage
-  -- local postgres = require "resty.session.utils".load_storage("postgres", {
+  -- local postgres = require "digifi.resty.session.utils".load_storage("postgres", {
   --   postgres = {
   --     host = "127.0.0.1",
   --   }
@@ -809,31 +809,31 @@ local load_storage do
 
     elseif storage == "dshm" then
       if not DSHM then
-        DSHM = require("resty.session.dshm")
+        DSHM = require("digifi.resty.session.dshm")
       end
       return DSHM.new(configuration and configuration.dshm)
 
     elseif storage == "file" then
       if not FILE then
-        FILE = require("resty.session.file")
+        FILE = require("digifi.resty.session.file")
       end
       return FILE.new(configuration and configuration.file)
 
     elseif storage == "memcached" or storage == "memcache" then
       if not MEMCACHED then
-        MEMCACHED = require("resty.session.memcached")
+        MEMCACHED = require("digifi.resty.session.memcached")
       end
       return MEMCACHED.new(configuration and configuration.memcached or configuration.memcache)
 
     elseif storage == "mysql" or storage == "mariadb" then
       if not MYSQL then
-        MYSQL = require("resty.session.mysql")
+        MYSQL = require("digifi.resty.session.mysql")
       end
       return MYSQL.new(configuration and configuration.mysql or configuration.mariadb)
 
     elseif storage == "postgres" or storage == "postgresql" then
       if not POSTGRES then
-        POSTGRES = require("resty.session.postgres")
+        POSTGRES = require("digifi.resty.session.postgres")
       end
       return POSTGRES.new(configuration and configuration.postgres or configuration.postgresql)
 
@@ -842,26 +842,26 @@ local load_storage do
       if cfg then
         if cfg.nodes then
           if not REDIS_CLUSTER then
-            REDIS_CLUSTER = require("resty.session.redis.cluster")
+            REDIS_CLUSTER = require("digifi.resty.session.redis.cluster")
           end
           return REDIS_CLUSTER.new(cfg)
 
         elseif cfg.sentinels then
           if not REDIS_SENTINEL then
-            REDIS_SENTINEL = require("resty.session.redis.sentinel")
+            REDIS_SENTINEL = require("digifi.resty.session.redis.sentinel")
           end
           return REDIS_SENTINEL.new(cfg)
         end
       end
 
       if not REDIS then
-        REDIS = require("resty.session.redis")
+        REDIS = require("digifi.resty.session.redis")
       end
       return REDIS.new(cfg)
 
     elseif storage == "shm" then
       if not SHM then
-        SHM = require("resty.session.shm")
+        SHM = require("digifi.resty.session.shm")
       end
 
       return SHM.new(configuration and configuration.shm)
@@ -886,7 +886,7 @@ end
 -- @treturn string formatted error message
 --
 -- @usage
--- local utils = require "resty.session.utils"
+-- local utils = require "digifi.resty.session.utils"
 -- local test = "aaaa"
 -- local data, err = utils.deflate(test)
 -- if not data then

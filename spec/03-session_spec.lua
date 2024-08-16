@@ -1,4 +1,4 @@
-local session = require "resty.session"
+local session = require "digifi.resty.session"
 
 
 local before_each = before_each

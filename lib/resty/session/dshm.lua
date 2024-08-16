@@ -1,11 +1,11 @@
 ---
 -- Distributed Shared Memory (DSHM) backend for session library
 --
--- @module resty.session.dshm
+-- @module digifi.resty.session.dshm
 
 
 local buffer = require "string.buffer"
-local utils = require "resty.session.utils"
+local utils = require "digifi.resty.session.utils"
 local dshm = require "resty.dshm"
 
 

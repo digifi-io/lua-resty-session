@@ -13,7 +13,7 @@ local require = require
 local table_new = require "table.new"
 local isempty = require "table.isempty"
 local buffer = require "string.buffer"
-local utils = require "resty.session.utils"
+local utils = require "digifi.resty.session.utils"
 
 
 local clear_request_header = ngx.req.clear_header
@@ -1616,7 +1616,7 @@ end
 -- @tparam table data data
 --
 -- @usage
--- local session, err, exists = require "resty.session".open()
+-- local session, err, exists = require "digifi.resty.session".open()
 -- if not exists then
 --   session:set_data({
 --     cart = {},
@@ -1637,7 +1637,7 @@ end
 -- @treturn table value
 --
 -- @usage
--- local session, err, exists = require "resty.session".open()
+-- local session, err, exists = require "digifi.resty.session".open()
 -- if exists then
 --   local data = session:get_data()
 --   ngx.req.set_header("Authorization", "Bearer " .. data.access_token)
@@ -1655,7 +1655,7 @@ end
 -- @tparam string key key
 -- @param value value
 --
--- local session, err, exists = require "resty.session".open()
+-- local session, err, exists = require "digifi.resty.session".open()
 -- if not exists then
 --   session:set("access-token", "eyJ...")
 --   session:save()
@@ -1678,7 +1678,7 @@ end
 -- @return value
 --
 -- @usage
--- local session, err, exists = require "resty.session".open()
+-- local session, err, exists = require "digifi.resty.session".open()
 -- if exists then
 --   local access_token = session:get("access-token")
 --   ngx.req.set_header("Authorization", "Bearer " .. access_token)
@@ -1700,7 +1700,7 @@ end
 -- @tparam string audience audience
 --
 -- @usage
--- local session = require "resty.session".new()
+-- local session = require "digifi.resty.session".new()
 -- session.set_audience("my-service")
 function metatable:set_audience(audience)
   assert(self.state ~= STATE_CLOSED, "unable to set audience on closed session")
@@ -1764,7 +1764,7 @@ end
 -- @tparam string subject subject
 --
 -- @usage
--- local session = require "resty.session".new()
+-- local session = require "digifi.resty.session".new()
 -- session.set_subject("john@doe.com")
 function metatable:set_subject(subject)
   assert(self.state ~= STATE_CLOSED, "unable to set subject on closed session")
@@ -1779,7 +1779,7 @@ end
 -- @treturn string subject
 --
 -- @usage
--- local session, err, exists = require "resty.session".open()
+-- local session, err, exists = require "digifi.resty.session".open()
 -- if exists then
 --   local subject = session.get_subject()
 -- end
@@ -1806,7 +1806,7 @@ end
 -- @treturn string|number metadata
 --
 -- @usage
--- local session, err, exists = require "resty.session".open()
+-- local session, err, exists = require "digifi.resty.session".open()
 -- if exists then
 --   local timeout = session.get_property("timeout")
 -- end
@@ -1875,9 +1875,13 @@ function metatable:open()
     return nil, err
   end
 
-  local ok, err = save(self, nil, true)
-  if not ok then
-    return nil, err
+
+  if not self.disable_remember_cookie_regeneration then
+    local ok, regenerate_remember_cookie_error = save(self, nil, true)
+
+    if not ok then
+      return nil, regenerate_remember_cookie_error
+    end
   end
 
   self.state = STATE_NEW
@@ -2267,7 +2271,7 @@ local session = {
 -- @tparam[opt] table configuration session @{configuration} overrides
 --
 -- @usage
--- require "resty.session".init({
+-- require "digifi.resty.session".init({
 --   audience = "my-application",
 --   storage = "redis",
 --   redis = {
@@ -2425,9 +2429,9 @@ end
 -- @treturn table session instance
 --
 -- @usage
--- local session = require "resty.session".new()
+-- local session = require "digifi.resty.session".new()
 -- -- OR
--- local session = require "resty.session".new({
+-- local session = require "digifi.resty.session".new({
 --   audience = "my-application",
 -- })
 function session.new(configuration)
@@ -2454,6 +2458,7 @@ function session.new(configuration)
   local ikm_fallbacks             = configuration and configuration.ikm_fallbacks
   local request_headers           = configuration and configuration.request_headers
   local response_headers          = configuration and configuration.response_headers
+  local disable_remember_cookie_regeneration = configuration and configuration.disable_remember_cookie_regeneration
 
   local cookie_http_only = configuration and configuration.cookie_http_only
   if cookie_http_only == nil then
@@ -2654,6 +2659,7 @@ function session.new(configuration)
         subject,
       },
     },
+    disable_remember_cookie_regeneration = disable_remember_cookie_regeneration,
   }, metatable)
 
   if storage then
@@ -2684,9 +2690,9 @@ end
 -- @treturn boolean `true`, if session existed, otherwise `false`
 --
 -- @usage
--- local session = require "resty.session".open()
+-- local session = require "digifi.resty.session".open()
 -- -- OR
--- local session, err, exists = require "resty.session".open({
+-- local session, err, exists = require "digifi.resty.session".open({
 --   audience = "my-application",
 -- })
 function session.open(configuration)
@@ -2715,9 +2721,9 @@ end
 -- @treturn boolean `true`, if session was refreshed, otherwise `false`
 --
 -- @usage
--- local session = require "resty.session".start()
+-- local session = require "digifi.resty.session".start()
 -- -- OR
--- local session, err, exists, refreshed = require "resty.session".start({
+-- local session, err, exists, refreshed = require "digifi.resty.session".start({
 --   audience = "my-application",
 -- })
 function session.start(configuration)
@@ -2759,9 +2765,9 @@ end
 -- @treturn boolean `true` if session was logged out, otherwise `false`
 --
 -- @usage
--- require "resty.session".logout()
+-- require "digifi.resty.session".logout()
 -- -- OR
--- local ok, err, exists, logged_out = require "resty.session".logout({
+-- local ok, err, exists, logged_out = require "digifi.resty.session".logout({
 --   audience = "my-application",
 -- })
 function session.logout(configuration)
@@ -2791,9 +2797,9 @@ end
 -- @treturn boolean `true` if session was destroyed, otherwise `false`
 --
 -- @usage
--- require "resty.session".destroy()
+-- require "digifi.resty.session".destroy()
 -- -- OR
--- local ok, err, exists, destroyed = require "resty.session".destroy({
+-- local ok, err, exists, destroyed = require "digifi.resty.session".destroy({
 --   cookie_name = "auth",
 -- })
 function session.destroy(configuration)

@@ -1,12 +1,12 @@
 ---
 -- Memcached backend for session library
 --
--- @module resty.session.memcached
+-- @module digifi.resty.session.memcached
 
 
 local memcached = require "resty.memcached"
 local buffer = require "string.buffer"
-local utils = require "resty.session.utils"
+local utils = require "digifi.resty.session.utils"
 
 
 local meta_get_latest = utils.meta_get_latest
