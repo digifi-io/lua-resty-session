@@ -1,5 +1,5 @@
 package = "digifi-lua-resty-session"
-version = "1.0-0"
+version = "1.0-1"
 source = {
   url = "git://github.com/digifi-io/lua-resty-session",
   tag = "v1.0.0",
